@@ -9,7 +9,7 @@ class Base_unit{
 public:
   virtual void flush() = 0;
   virtual void execute() = 0;
-
+  virtual ~Base_unit(){}
 };
 
 

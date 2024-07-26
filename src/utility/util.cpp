@@ -3,7 +3,7 @@
 #include <sys/types.h>
 namespace cpu{
 
-uint32_t sign_ext(uint32_t x, size_t bit){
+uint32_t sign_ext(uint32_t x, int bit){
   return ((int32_t)(x<<(32-bit)))>>(32-bit);
 }
 uint32_t get_segment(uint32_t data, int l, int r){

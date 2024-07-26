@@ -1,4 +1,6 @@
 #include"include/simulator.h"
+// #include"Memory.h"
+
 #include "include/units/Instruction.h"
 #include "include/utility/util.h"
 //---------------------------------------------------------
@@ -41,6 +43,9 @@ void Naive_Simulator::step()
   status_next.regs = status_cur.regs;
   if(ins.opt==Opt::ADDI && ins.rd==10 && ins.rs1==0 && ins.imm==255){
     status_next.halt=true;
+    status_cur = status_next;
+
+    return;
   }
 
   if(ins.type==Optype::U){
@@ -171,6 +176,8 @@ void Naive_Simulator::step()
     throw std::exception();
     throw "Invalid instruction";
   }
+  status_next.regs.reg[0]=0;
+  // Warning this is extremely important
   status_cur = status_next;
 
 }

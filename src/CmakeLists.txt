@@ -1,8 +1,10 @@
 set(Unit_src 
-
+  units/Instruction.cpp
+  units/Memory.cpp
+  units/Register_file.cpp
 )
 set(Utility_src 
-
+  utility/util.cpp
 )
 
-add_library(src ${Unit_src} ${Utility_src})
+add_library(src ${Unit_src} ${Utility_src} simulator.cpp)

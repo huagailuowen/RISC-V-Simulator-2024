@@ -10,7 +10,7 @@ namespace cpu{
 class Memory:public Base_unit{
 public:
   Memory()=default;
-  ~Memory();
+  ~Memory()=default;
   // Warning ! you may confused with the return type of fetch_32 with fetch
   // RAMType fetch(int pos);
   // void store(int pos,DataType data);

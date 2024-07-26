@@ -1,4 +1,6 @@
 #include"../include/units/Instruction.h"
+#include"simulator.h"
+
 #include <cstdint>
 #include <sys/types.h>
 
@@ -7,10 +9,10 @@ namespace cpu{
 
 
 
-void get_ins(Status &status,Ins &ins)
+void get_ins(Status *status,Ins &ins)
 {
-  ins.pc_addr = status.pc;
-  decode(status.opcode,ins);
+  ins.pc_addr = status->pc;
+  decode(status->opcode,ins);
 }
 
 void decode(DataType input, Ins &ins)
@@ -72,7 +74,8 @@ void decode_J(DataType input, Ins &ins)
   ins.imm = sign_ext((get_segment(input,12,19)<<12) 
     | (get_segment(input,20,20)<<11) 
     | (get_segment(input,21,30)<<1)
-    | (get_segment(input,31,31)<<20),8);
+    | (get_segment(input,31,31)<<20),21);
+    //Warning not 20
   //ins.pc_addr is not assigned in this part
   ins.rs1 = -1;
   ins.rs2 = -1; 
@@ -81,7 +84,7 @@ void decode_J(DataType input, Ins &ins)
 void decode_B(DataType input, Ins &ins)
 {
   uint32_t opcode = input & 0x7F;
-  if(input!=0b1100011){
+  if(opcode!=0b1100011){
     throw std::exception();
     throw "Invalid instruction";
   }
@@ -106,7 +109,8 @@ void decode_B(DataType input, Ins &ins)
   ins.imm = sign_ext((get_segment(input,8,11)<<1) 
     | (get_segment(input,25,30)<<5) 
     | (get_segment(input,7,7)<<11) 
-    | (get_segment(input,31,31)<<12),12);  
+    | (get_segment(input,31,31)<<12),13);
+    //Warning not 12  
   //ins.pc_addr is not assigned in this part
   ins.rs1 = get_segment(input,15,19);
   ins.rs2 = get_segment(input,20,24);

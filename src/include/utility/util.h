@@ -2,7 +2,7 @@
 #define UTIL_H
 #include <cstdint>
 #include<string>
-
+namespace cpu{
 enum class Optype{
   R,I,S,B,U,J
 };
@@ -64,12 +64,12 @@ struct Ins{
 };
 using std::string;
 
-std::string Opt_to_string(const Opt &opt);
+// std::string Opt_to_string(const Opt &opt);
 
 uint32_t get_segment(uint32_t data,int l,int r);
 //Get the segment [l,r] of data, the low bit is l and the high bit is r
 uint32_t sign_ext(uint32_t data,int bit);
 
 uint32_t Hex_to_int(std::string str);
-
+}
 #endif
