@@ -1,0 +1,6 @@
+/mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024/CMakeFiles/code.dir
+/mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024/CMakeFiles/edit_cache.dir
+/mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024/CMakeFiles/rebuild_cache.dir
+/mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024/src/CMakeFiles/src.dir
+/mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024/src/CMakeFiles/edit_cache.dir
+/mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024/src/CMakeFiles/rebuild_cache.dir

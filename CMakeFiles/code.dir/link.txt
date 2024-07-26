@@ -1,0 +1,1 @@
+/usr/bin/g++ -O2 -O3 -DNDEBUG CMakeFiles/code.dir/src/main.cpp.o -o code  src/libsrc.a 
