@@ -1,5 +1,7 @@
 #include"../include/units/Instruction.h"
 #include"simulator.h"
+#include "units/Branch_predict.h"
+#include "utility/util.h"
 
 #include <cstdint>
 #include <sys/types.h>
@@ -7,12 +9,60 @@
 namespace cpu{
 
 
-
-
-void get_ins(Status *status,Ins &ins)
+void Instruction_unit::step(Status& status)
 {
-  ins.pc_addr = status->pc;
-  decode(status->opcode,ins);
+  if(status.roll_back){
+    ins_q.clear();
+  }
+  //at very first it should be empty, so ins_stall == true
+  if(status.ins_stall){
+    return;
+  }
+  if(ins_q.full()){
+    throw "Instruction queue is full";
+  }
+  ins_q.push(status.ins);
+}
+void Instruction_unit::execute(Status&status_cur,Status&status_next)
+{
+  //there the ins of status_cur is decoded and put into ins_q
+  //it has readly been done in the outer Simulator
+  get_ins(status_cur,status_cur.ins);
+  if(status_cur.ins.type==Optype::B){
+    // the branch need to predict
+    bool res=predictor.predict(status_cur);
+    //we should record the result of prediction
+    status_cur.ins.predict_res=res;
+    if(res){
+      status_next.pc = status_cur.pc+status_cur.ins.imm;
+    }else{
+      status_next.pc = status_cur.pc+4;
+    }
+  }else if(status_cur.ins.type==Optype::J){
+    status_next.pc = status_cur.pc+status_cur.ins.imm;
+  }else if(status_cur.ins.opt==Opt::JALR){
+    status_next.pc = status_cur.regs.reg[status_cur.ins.rs1]+status_cur.ins.imm;
+  }else{
+    status_next.pc=status_cur.pc+4;
+  }
+
+  launch(status_cur,status_next);
+}
+void Instruction_unit::launch(Status&status_cur,Status&status_next)
+{
+  if(ins_q.empty()){
+    return;
+  }
+  Ins ins = ins_q.front();
+  ins_q.pop();
+
+
+  //TO DO
+}
+void get_ins(Status &status,Ins &ins)
+{
+  ins.pc_addr = status.pc;
+  decode(status.opcode,ins);
 }
 
 void decode(DataType input, Ins &ins)

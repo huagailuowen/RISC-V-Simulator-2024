@@ -60,7 +60,7 @@ EQUALS = =
 CMAKE_SOURCE_DIR = /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024
+CMAKE_BINARY_DIR = /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024/tmpdir
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -87,14 +87,14 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	cd /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024 && $(CMAKE_COMMAND) -E cmake_progress_start /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024/CMakeFiles /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024/src//CMakeFiles/progress.marks
-	cd /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024 && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024/CMakeFiles 0
+	cd /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024/tmpdir && $(CMAKE_COMMAND) -E cmake_progress_start /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024/tmpdir/CMakeFiles /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024/tmpdir/src//CMakeFiles/progress.marks
+	cd /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024/tmpdir && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024/tmpdir/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024 && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/clean
+	cd /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024/tmpdir && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/clean
 .PHONY : clean
 
 # The main clean target
@@ -103,22 +103,22 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024 && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/preinstall
+	cd /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024/tmpdir && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024 && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/preinstall
+	cd /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024/tmpdir && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024 && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024/tmpdir && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
 # Convenience name for target.
 src/CMakeFiles/src.dir/rule:
-	cd /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024 && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/CMakeFiles/src.dir/rule
+	cd /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024/tmpdir && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/CMakeFiles/src.dir/rule
 .PHONY : src/CMakeFiles/src.dir/rule
 
 # Convenience name for target.
@@ -127,7 +127,7 @@ src: src/CMakeFiles/src.dir/rule
 
 # fast build rule for target.
 src/fast:
-	cd /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024 && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/src.dir/build.make src/CMakeFiles/src.dir/build
+	cd /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024/tmpdir && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/src.dir/build.make src/CMakeFiles/src.dir/build
 .PHONY : src/fast
 
 simulator.o: simulator.cpp.o
@@ -135,7 +135,7 @@ simulator.o: simulator.cpp.o
 
 # target to build an object file
 simulator.cpp.o:
-	cd /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024 && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/src.dir/build.make src/CMakeFiles/src.dir/simulator.cpp.o
+	cd /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024/tmpdir && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/src.dir/build.make src/CMakeFiles/src.dir/simulator.cpp.o
 .PHONY : simulator.cpp.o
 
 simulator.i: simulator.cpp.i
@@ -143,7 +143,7 @@ simulator.i: simulator.cpp.i
 
 # target to preprocess a source file
 simulator.cpp.i:
-	cd /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024 && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/src.dir/build.make src/CMakeFiles/src.dir/simulator.cpp.i
+	cd /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024/tmpdir && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/src.dir/build.make src/CMakeFiles/src.dir/simulator.cpp.i
 .PHONY : simulator.cpp.i
 
 simulator.s: simulator.cpp.s
@@ -151,7 +151,7 @@ simulator.s: simulator.cpp.s
 
 # target to generate assembly for a file
 simulator.cpp.s:
-	cd /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024 && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/src.dir/build.make src/CMakeFiles/src.dir/simulator.cpp.s
+	cd /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024/tmpdir && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/src.dir/build.make src/CMakeFiles/src.dir/simulator.cpp.s
 .PHONY : simulator.cpp.s
 
 units/Instruction.o: units/Instruction.cpp.o
@@ -159,7 +159,7 @@ units/Instruction.o: units/Instruction.cpp.o
 
 # target to build an object file
 units/Instruction.cpp.o:
-	cd /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024 && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/src.dir/build.make src/CMakeFiles/src.dir/units/Instruction.cpp.o
+	cd /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024/tmpdir && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/src.dir/build.make src/CMakeFiles/src.dir/units/Instruction.cpp.o
 .PHONY : units/Instruction.cpp.o
 
 units/Instruction.i: units/Instruction.cpp.i
@@ -167,7 +167,7 @@ units/Instruction.i: units/Instruction.cpp.i
 
 # target to preprocess a source file
 units/Instruction.cpp.i:
-	cd /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024 && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/src.dir/build.make src/CMakeFiles/src.dir/units/Instruction.cpp.i
+	cd /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024/tmpdir && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/src.dir/build.make src/CMakeFiles/src.dir/units/Instruction.cpp.i
 .PHONY : units/Instruction.cpp.i
 
 units/Instruction.s: units/Instruction.cpp.s
@@ -175,7 +175,7 @@ units/Instruction.s: units/Instruction.cpp.s
 
 # target to generate assembly for a file
 units/Instruction.cpp.s:
-	cd /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024 && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/src.dir/build.make src/CMakeFiles/src.dir/units/Instruction.cpp.s
+	cd /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024/tmpdir && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/src.dir/build.make src/CMakeFiles/src.dir/units/Instruction.cpp.s
 .PHONY : units/Instruction.cpp.s
 
 units/Memory.o: units/Memory.cpp.o
@@ -183,7 +183,7 @@ units/Memory.o: units/Memory.cpp.o
 
 # target to build an object file
 units/Memory.cpp.o:
-	cd /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024 && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/src.dir/build.make src/CMakeFiles/src.dir/units/Memory.cpp.o
+	cd /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024/tmpdir && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/src.dir/build.make src/CMakeFiles/src.dir/units/Memory.cpp.o
 .PHONY : units/Memory.cpp.o
 
 units/Memory.i: units/Memory.cpp.i
@@ -191,7 +191,7 @@ units/Memory.i: units/Memory.cpp.i
 
 # target to preprocess a source file
 units/Memory.cpp.i:
-	cd /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024 && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/src.dir/build.make src/CMakeFiles/src.dir/units/Memory.cpp.i
+	cd /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024/tmpdir && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/src.dir/build.make src/CMakeFiles/src.dir/units/Memory.cpp.i
 .PHONY : units/Memory.cpp.i
 
 units/Memory.s: units/Memory.cpp.s
@@ -199,7 +199,7 @@ units/Memory.s: units/Memory.cpp.s
 
 # target to generate assembly for a file
 units/Memory.cpp.s:
-	cd /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024 && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/src.dir/build.make src/CMakeFiles/src.dir/units/Memory.cpp.s
+	cd /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024/tmpdir && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/src.dir/build.make src/CMakeFiles/src.dir/units/Memory.cpp.s
 .PHONY : units/Memory.cpp.s
 
 units/Register_file.o: units/Register_file.cpp.o
@@ -207,7 +207,7 @@ units/Register_file.o: units/Register_file.cpp.o
 
 # target to build an object file
 units/Register_file.cpp.o:
-	cd /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024 && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/src.dir/build.make src/CMakeFiles/src.dir/units/Register_file.cpp.o
+	cd /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024/tmpdir && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/src.dir/build.make src/CMakeFiles/src.dir/units/Register_file.cpp.o
 .PHONY : units/Register_file.cpp.o
 
 units/Register_file.i: units/Register_file.cpp.i
@@ -215,7 +215,7 @@ units/Register_file.i: units/Register_file.cpp.i
 
 # target to preprocess a source file
 units/Register_file.cpp.i:
-	cd /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024 && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/src.dir/build.make src/CMakeFiles/src.dir/units/Register_file.cpp.i
+	cd /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024/tmpdir && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/src.dir/build.make src/CMakeFiles/src.dir/units/Register_file.cpp.i
 .PHONY : units/Register_file.cpp.i
 
 units/Register_file.s: units/Register_file.cpp.s
@@ -223,7 +223,7 @@ units/Register_file.s: units/Register_file.cpp.s
 
 # target to generate assembly for a file
 units/Register_file.cpp.s:
-	cd /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024 && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/src.dir/build.make src/CMakeFiles/src.dir/units/Register_file.cpp.s
+	cd /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024/tmpdir && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/src.dir/build.make src/CMakeFiles/src.dir/units/Register_file.cpp.s
 .PHONY : units/Register_file.cpp.s
 
 utility/util.o: utility/util.cpp.o
@@ -231,7 +231,7 @@ utility/util.o: utility/util.cpp.o
 
 # target to build an object file
 utility/util.cpp.o:
-	cd /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024 && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/src.dir/build.make src/CMakeFiles/src.dir/utility/util.cpp.o
+	cd /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024/tmpdir && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/src.dir/build.make src/CMakeFiles/src.dir/utility/util.cpp.o
 .PHONY : utility/util.cpp.o
 
 utility/util.i: utility/util.cpp.i
@@ -239,7 +239,7 @@ utility/util.i: utility/util.cpp.i
 
 # target to preprocess a source file
 utility/util.cpp.i:
-	cd /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024 && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/src.dir/build.make src/CMakeFiles/src.dir/utility/util.cpp.i
+	cd /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024/tmpdir && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/src.dir/build.make src/CMakeFiles/src.dir/utility/util.cpp.i
 .PHONY : utility/util.cpp.i
 
 utility/util.s: utility/util.cpp.s
@@ -247,7 +247,7 @@ utility/util.s: utility/util.cpp.s
 
 # target to generate assembly for a file
 utility/util.cpp.s:
-	cd /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024 && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/src.dir/build.make src/CMakeFiles/src.dir/utility/util.cpp.s
+	cd /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024/tmpdir && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/src.dir/build.make src/CMakeFiles/src.dir/utility/util.cpp.s
 .PHONY : utility/util.cpp.s
 
 # Help Target
@@ -285,6 +285,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024 && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /mnt/d/周宸源/大学/学习/程序/RISC-V-Simulator-2024/tmpdir && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 

@@ -6,7 +6,7 @@
 #include"Base_unit.h"
 #include <cstdint>
 namespace cpu{
-
+class Status;
 class Memory:public Base_unit{
 public:
   Memory()=default;
@@ -24,7 +24,7 @@ public:
   void store_16(int pos,DataType data);
   void store_8(int pos,DataType data);
   
-  void flush();
+  void step(Status* status);
   void execute();
   void init();
 #ifdef DEBUG_

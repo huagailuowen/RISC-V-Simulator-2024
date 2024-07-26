@@ -1,0 +1,2 @@
+/usr/bin/ar qc libsrc.a CMakeFiles/src.dir/units/Instruction.cpp.o CMakeFiles/src.dir/units/Memory.cpp.o CMakeFiles/src.dir/units/Register_file.cpp.o CMakeFiles/src.dir/utility/util.cpp.o CMakeFiles/src.dir/simulator.cpp.o
+/usr/bin/ranlib libsrc.a

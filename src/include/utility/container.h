@@ -16,6 +16,9 @@ public:
       data[i].first = false;
     }
   }
+  int MAX_SIZE_(){
+    return MAX_SIZE;
+  }
   int vacant_pos(){
     if(size_>=MAX_SIZE){
       return -1;
@@ -59,6 +62,13 @@ public:
     }
     data[pos].first = false;
     size_--;
+  }
+  bool exist(int pos){
+    if(pos>=MAX_SIZE){
+      throw std::exception();
+      throw "Out of bound";
+    }
+    return data[pos].first;
   }
   T &operator[](int pos){
     if(pos>=MAX_SIZE){

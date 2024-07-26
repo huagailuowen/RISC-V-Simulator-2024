@@ -10,7 +10,14 @@ const int Cache_SIZE = 1<<15;
 const int Queue_SIZE = 32;
 const int Container_SIZE = 32;
 
+const int CD_BUS_SIZE = 8;
+const int MEM_BUS_SIZE = 4;
 
+const int ALU_MUL_SIZE = 32;
+const int ALU_ADD_SIZE = 32;
+
+const int ALU_MUL_LATENCY = 3;
+const int ALU_ADD_LATENCY = 1;
 }
 
 

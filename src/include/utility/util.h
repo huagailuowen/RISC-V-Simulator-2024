@@ -55,6 +55,7 @@ struct Ins{
   Optype type;
   Opt opt;
   DataType rd,rs1,rs2,imm;
+  bool predict_res;
   AddrType pc_addr;
   Ins(Optype type,Opt opt,int rd,int rs1,int rs2,int imm,int pc_addr):
       type(type),opt(opt),rd(rd),rs1(rs1),rs2(rs2),imm(imm),pc_addr(pc_addr){}

@@ -33,6 +33,12 @@ public:
   bool empty() { return size == 0; }
   int get_size() { return size; }
   bool full() { return size == Queue_SIZE; }
+  void clear()
+  {
+    head = 0;
+    tail = 0;
+    size = 0;
+  }
 
 private:
   T data[Queue_SIZE];

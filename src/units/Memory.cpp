@@ -1,5 +1,5 @@
 #include"../include/units/Memory.h"
-#include <cstdint>
+#include"simulator.h"
 #include <cstring>
 #include <exception>
 #include <iostream>
@@ -90,6 +90,8 @@ void Memory::init(){
   }
 }
 
-void Memory::flush(){}
+void Memory::step(Status * status){
+
+}
 void Memory::execute(){}
 }
