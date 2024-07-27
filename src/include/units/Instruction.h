@@ -22,7 +22,7 @@ public:
 
   Instruction_unit();
   ~Instruction_unit();
-  void step(Status & status);  
+  void step(Status&status_cur,Status&status_next);  
   void execute(Status&status_cur,Status&status_next);
   void launch(Status&status_cur,Status&status_next);
 private:

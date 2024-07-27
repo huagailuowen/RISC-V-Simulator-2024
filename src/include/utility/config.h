@@ -5,6 +5,9 @@ namespace cpu{
 
 const int Register_SIZE = 32;
 const int Memory_SIZE = 1<<20;
+const int RS_SIZE = 32;
+const int LSB_SIZE = 32;
+
 const int Cache_SIZE = 1<<15;
 
 const int Queue_SIZE = 32;
@@ -18,6 +21,7 @@ const int ALU_ADD_SIZE = 32;
 
 const int ALU_MUL_LATENCY = 3;
 const int ALU_ADD_LATENCY = 1;
+
 }
 
 

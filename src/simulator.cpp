@@ -7,13 +7,12 @@ namespace cpu{
 Simulator::Simulator()
 {
   clock_=0;
-  units[0] = new Memory();
+  memory=new Memory();
   units[1] = new Instruction_unit();
   units[2] = new Arithmetic_logic_unit();
   units[3] = new Load_store_buffer();
   units[4] = new Reorder_buffer();
-  units[5] = new Reservation_station();
-  predictor = new Branch_predict();
+  units[0] = new Reservation_station();
 
 
 }

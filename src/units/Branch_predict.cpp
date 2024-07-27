@@ -11,8 +11,8 @@ bool Branch_predict::predict(Status &status){
   if(ins.type!=Optype::B){
     throw "Invalid instruction";
   }
-  if(status->having_predicted){
-    return status->predict_res;
+  if(status.having_predicted){
+    return status.predict_res;
   }
   // TO DO
   return true;

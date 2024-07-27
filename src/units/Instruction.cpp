@@ -1,6 +1,7 @@
 #include"../include/units/Instruction.h"
 #include"simulator.h"
 #include "units/Branch_predict.h"
+#include "units/Reorder_buffer.h"
 #include "utility/util.h"
 
 #include <cstdint>
@@ -9,43 +10,49 @@
 namespace cpu{
 
 
-void Instruction_unit::step(Status& status)
+void Instruction_unit::step(Status&status_cur,Status&status_next)
 {
-  if(status.roll_back){
+  if(status_next.roll_back){
     ins_q.clear();
   }
   //at very first it should be empty, so ins_stall == true
-  if(status.ins_stall){
+  if(status_cur.ins_stall){
     return;
   }
   if(ins_q.full()){
     throw "Instruction queue is full";
   }
-  ins_q.push(status.ins);
+  ins_q.push(status_cur.ins);
 }
 void Instruction_unit::execute(Status&status_cur,Status&status_next)
 {
+
   //there the ins of status_cur is decoded and put into ins_q
   //it has readly been done in the outer Simulator
-  get_ins(status_cur,status_cur.ins);
-  if(status_cur.ins.type==Optype::B){
-    // the branch need to predict
-    bool res=predictor.predict(status_cur);
-    //we should record the result of prediction
-    status_cur.ins.predict_res=res;
-    if(res){
-      status_next.pc = status_cur.pc+status_cur.ins.imm;
-    }else{
-      status_next.pc = status_cur.pc+4;
-    }
-  }else if(status_cur.ins.type==Optype::J){
-    status_next.pc = status_cur.pc+status_cur.ins.imm;
-  }else if(status_cur.ins.opt==Opt::JALR){
-    status_next.pc = status_cur.regs.reg[status_cur.ins.rs1]+status_cur.ins.imm;
-  }else{
-    status_next.pc=status_cur.pc+4;
-  }
+  get_ins(status_cur,status_cur.ins); 
 
+  if(status_cur.ins_stall){
+    status_next.pc=status_cur.pc;
+  }else{
+    if(status_cur.ins.type==Optype::B){
+      // the branch need to predict
+      bool res=predictor.predict(status_cur);
+      //we should record the result of prediction in cur!!
+      status_cur.ins.predict_res=res;
+      if(res){
+        status_next.pc = status_cur.pc+status_cur.ins.imm;
+        //there is a small add_unit to do this transition
+      }else{
+        status_next.pc = status_cur.pc+4;
+      }
+    }else if(status_cur.ins.type==Optype::J){
+      status_next.pc = status_cur.pc+status_cur.ins.imm;
+    }else if(status_cur.ins.opt==Opt::JALR){
+      status_next.pc = status_cur.regs.reg[status_cur.ins.rs1]+status_cur.ins.imm;
+    }else{
+      status_next.pc=status_cur.pc+4;
+    }
+  }
   launch(status_cur,status_next);
 }
 void Instruction_unit::launch(Status&status_cur,Status&status_next)
@@ -53,15 +60,22 @@ void Instruction_unit::launch(Status&status_cur,Status&status_next)
   if(ins_q.empty()){
     return;
   }
+  if(status_cur.rob_full){
+    return;
+  }
   Ins ins = ins_q.front();
   ins_q.pop();
-
-
+  ROB_signal rob_signal;
+  rob_signal.ins = ins;
+  status_next.rob_signal.first = true;
+  status_next.rob_signal.second = rob_signal;
   //TO DO
 }
 void get_ins(Status &status,Ins &ins)
 {
   ins.pc_addr = status.pc;
+  //we assume fectch the opcode is very fast
+  status.opcode = status.memory_->fetch_32(status.pc);
   decode(status.opcode,ins);
 }
 

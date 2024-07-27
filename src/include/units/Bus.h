@@ -7,17 +7,23 @@
 namespace cpu{
 
 enum class BusType {
-  Execute,
-  LoadMen,
-  StoreMem,
-  StoreRes,
-  INVALID,
+  //cd_bus
+  LOAD_FINISHED,
+  STORE_FINISHED,//these two also used in mem_bus
+  COMPUTE_FINISHED,
+  //mem_bus
+  LOAD_REQUEST,
+  STORE_REQUEST,
+
 };
 struct Bus_item{
   DataType data;
   AddrType addr;
+  //in the mem_bus, addr means the address of the data
+  //in the cd_bus, addr means the dest in the ROB
   BusType type;
-  Bus_item(DataType data,AddrType addr,BusType type):data(data),addr(addr),type(type){}
+  int dest;
+  Bus_item(DataType data,AddrType addr,BusType type,int dest):data(data),addr(addr),type(type),dest(dest){}
 };
 template<int BUS_CAPCITY>
 class Bus{
@@ -25,6 +31,10 @@ private:
   Container<Bus_item,BUS_CAPCITY> items;
 public:
   Bus(){}
+  bool full()
+  {
+    return items.full();
+  }
   void clear()
   {
     items.clear();
@@ -33,9 +43,9 @@ public:
   {
     items.init();
   }
-  void insert(DataType data,AddrType addr,BusType type)
+  void insert(DataType data,AddrType addr,BusType type,int dest)
   {
-    items.insert(Bus_item(data,addr,type));
+    items.insert(Bus_item(data,addr,type,dest));
   }
   bool exist(int pos)
   {
@@ -44,6 +54,14 @@ public:
   Bus_item get(int pos)
   {
     return items.get(pos);
+  }
+  int size()
+  {
+    return items.size();
+  }
+  int MAX_SIZE_()
+  {
+    return items.MAX_SIZE_();
   }
 
 };

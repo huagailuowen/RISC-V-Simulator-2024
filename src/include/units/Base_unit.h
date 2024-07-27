@@ -7,7 +7,7 @@ namespace cpu{
 class Status;
 class Base_unit{
 public:
-  virtual void step(Status&status) = 0;
+  virtual void step(Status&status_cur,Status&status_next) = 0;
   virtual void execute(Status&status_cur,Status&status_next) = 0;
   virtual ~Base_unit(){}
 };

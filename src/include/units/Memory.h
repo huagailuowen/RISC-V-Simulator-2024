@@ -34,7 +34,7 @@ public:
 private:
   RAMType ram[Memory_SIZE];
   // RAMType cache[Cache_SIZE];
-
+  int latency_time;
 };
 
 

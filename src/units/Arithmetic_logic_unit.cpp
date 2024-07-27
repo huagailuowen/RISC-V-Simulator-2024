@@ -156,18 +156,18 @@ Arithmetic_logic_unit::Arithmetic_logic_unit(){
   add.clear();
 }
 Arithmetic_logic_unit::~Arithmetic_logic_unit(){}
-void Arithmetic_logic_unit::step(Status&status){
-  if(status.roll_back){
+void Arithmetic_logic_unit::step(Status&status_cur,Status&status_next){
+  if(status_next.roll_back){
     add.clear();
     return;
   }
-  if(status.rs_signal.first){
-    ALU_type type=get_ALU_type(status.rs_signal.second.op);
+  if(status_next.alu_signal.first){
+    ALU_type type=get_ALU_type(status_next.alu_signal.second.op);
     if(type==ALU_type::ADD){
       if(add.full()){
         throw "ALU is full";
       }
-      int pos = add.insert(ALU_unit(status.rs_signal.second.input1,status.rs_signal.second.input2,status.rs_signal.second.op,status.rs_signal.second.dest));
+      int pos = add.insert(ALU_unit(status_next.alu_signal.second.input1,status_next.alu_signal.second.input2,status_next.alu_signal.second.op,status_next.alu_signal.second.dest));
     }else{
       throw "we will not implement this";
     }
@@ -180,7 +180,7 @@ void Arithmetic_logic_unit::execute(Status&status_cur,Status&status_next){
   for(int i=0;i<add.MAX_SIZE_();i++){
     if(add.exist(i)){
       if(add[i].step()){
-        cd_bus->insert(add[i].output,add[i].dest,BusType::StoreRes);
+        cd_bus->insert(add[i].output,0,BusType::COMPUTE_FINISHED,add[i].dest);
         add.erase(i);
         return;
       }
