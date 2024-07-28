@@ -21,6 +21,7 @@ const int ALU_ADD_SIZE = 32;
 
 const int ALU_MUL_LATENCY = 3;
 const int ALU_ADD_LATENCY = 1;
+const int MEM_LATENCY = 4;
 
 }
 

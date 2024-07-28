@@ -12,9 +12,13 @@ enum class BusType {
   STORE_FINISHED,//these two also used in mem_bus
   COMPUTE_FINISHED,
   //mem_bus
-  LOAD_REQUEST,
-  STORE_REQUEST,
-
+  TRY_TO_STORE,
+  LOAD_REQUEST_8,
+  STORE_REQUEST_8,
+  LOAD_REQUEST_16,
+  STORE_REQUEST_16,
+  LOAD_REQUEST_32,
+  STORE_REQUEST_32,
 };
 struct Bus_item{
   DataType data;
@@ -62,6 +66,10 @@ public:
   int MAX_SIZE_()
   {
     return items.MAX_SIZE_();
+  }
+  Bus_item& fetch(int index)
+  {
+    return items[index];
   }
 
 };

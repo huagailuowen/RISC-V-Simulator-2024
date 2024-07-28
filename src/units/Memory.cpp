@@ -1,10 +1,13 @@
 #include"../include/units/Memory.h"
 #include"simulator.h"
+#include "utility/config.h"
 #include <cstring>
 #include <exception>
 #include <iostream>
 namespace cpu{
-
+Memory::Memory(Bus<MEM_BUS_SIZE>*mem_bus):mem_bus(mem_bus){
+  latency_time=0;
+}
 // RAMType Memory::fetch(int pos){
 //   if(pos<0||pos>=Memory_SIZE){
 //     throw std::exception();
@@ -90,8 +93,56 @@ void Memory::init(){
   }
 }
 
-void Memory::step(Status * status){
-
+void Memory::step(Status&status_cur,Status&status_next){
+  if(status_next.roll_back){
+    latency_time=0;
+    return;
+  }
+  //the cd_bus and mem_bus should be clear in outside
 }
-void Memory::execute(){}
+void Memory::execute(Status&status_cur,Status&status_next){
+  if(status_next.roll_back){
+    return;
+  }
+  if(latency_time){
+    latency_time--;
+  }
+  if(latency_time==0){
+    for(int i=0;i<MEM_BUS_SIZE;i++){
+      if(!mem_bus->exist(i)){
+        continue;
+      }
+      auto &bus_item=mem_bus->fetch(i);
+      if(bus_item.type==BusType::LOAD_FINISHED||bus_item.type==BusType::STORE_FINISHED){
+        continue;
+      }
+      if(bus_item.type==BusType::LOAD_REQUEST_8){
+        bus_item.data=fetch_8(bus_item.addr);
+        bus_item.type=BusType::LOAD_FINISHED;
+      }else if(bus_item.type==BusType::STORE_REQUEST_8){
+        store_8(bus_item.addr,bus_item.data);
+        bus_item.type=BusType::STORE_FINISHED;
+      }else if(bus_item.type==BusType::LOAD_REQUEST_16){
+        bus_item.data=fetch_16(bus_item.addr);
+        bus_item.type=BusType::LOAD_FINISHED;
+      }else if(bus_item.type==BusType::STORE_REQUEST_16){
+        store_16(bus_item.addr,bus_item.data);
+        bus_item.type=BusType::STORE_FINISHED;
+      }else if(bus_item.type==BusType::LOAD_REQUEST_32){
+        bus_item.data=fetch_32(bus_item.addr);
+        bus_item.type=BusType::LOAD_FINISHED;
+      }else if(bus_item.type==BusType::STORE_REQUEST_32){
+        store_32(bus_item.addr,bus_item.data);
+        bus_item.type=BusType::STORE_FINISHED;
+      }else{
+        throw "Invalid bus type";
+      }
+      break;
+      //can memory serve multiple request at the same time?
+      //now we assume that memory can only serve one request at a time
+
+    }
+    latency_time=MEM_LATENCY;
+  }
+}
 }

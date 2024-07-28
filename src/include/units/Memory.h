@@ -4,12 +4,13 @@
 #include"../utility/util.h"
 
 #include"Base_unit.h"
+#include "units/Bus.h"
 #include <cstdint>
 namespace cpu{
 class Status;
 class Memory:public Base_unit{
 public:
-  Memory()=default;
+  Memory(Bus<MEM_BUS_SIZE>*mem_bus);
   ~Memory()=default;
   // Warning ! you may confused with the return type of fetch_32 with fetch
   // RAMType fetch(int pos);
@@ -24,8 +25,8 @@ public:
   void store_16(int pos,DataType data);
   void store_8(int pos,DataType data);
   
-  void step(Status* status);
-  void execute();
+  void step(Status&status_cur,Status&status_next);
+  void execute(Status&status_cur,Status&status_next);
   void init();
 #ifdef DEBUG_
 public:
@@ -35,6 +36,7 @@ private:
   RAMType ram[Memory_SIZE];
   // RAMType cache[Cache_SIZE];
   int latency_time;
+  Bus<MEM_BUS_SIZE>* mem_bus;
 };
 
 

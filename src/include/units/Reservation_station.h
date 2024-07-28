@@ -17,9 +17,9 @@ struct RS_item{
   RS_item(Ins ins):ins(ins),ready(false),Vj(0),Vk(0),A(0),Qj(-1),Qk(-1),dest(-1){}
 };
 
-class Reservation_station{
+class Reservation_station:public Base_unit{
 public:
-  Reservation_station();
+  Reservation_station(Bus<CD_BUS_SIZE>*cd_bus);
   void step(Status&status_cur,Status&status_next);
   void execute(Status&status_cur,Status&status_next);
   //tell the alu what to do

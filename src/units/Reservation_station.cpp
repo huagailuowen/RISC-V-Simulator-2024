@@ -1,11 +1,17 @@
 #include"../include/units/Reservation_station.h"
 #include"simulator.h"
 namespace cpu{
-Reservation_station::Reservation_station(){
+Reservation_station::Reservation_station(Bus<CD_BUS_SIZE>*cd_bus){
   items.clear();
+  this->cd_bus=cd_bus;
 }
 void Reservation_station::step(Status&status_cur,Status&status_next){
   update_state(status_cur,status_next);
+  if(status_next.roll_back){
+    items.clear();
+    status_next.rs_full=false;
+    return;
+  }
 }
 void Reservation_station::update_state(Status&status_cur,Status&status_next){
   for(int i=0;i<items.MAX_SIZE_();i++){//not the size, but the capacity
@@ -37,6 +43,37 @@ void Reservation_station::update_state(Status&status_cur,Status&status_next){
 }
   
 void Reservation_station::execute(Status&status_cur,Status&status_next){
+  //load the data from the rs_signal
+  if(status_cur.rs_signal.first){
+    if(items.full()){
+      throw "RS is full";
+    }
+    RS_item item(status_cur.rs_signal.second.ins);
+    item.dest=status_cur.rs_signal.second.dest;
+    if(item.ins.type==Optype::R||item.ins.type==Optype::B||item.ins.type==Optype::J||item.ins.opt==Opt::JALR||item.ins.type==Optype::U){
+      item.Qj=status_cur.rs_signal.second.rely_j;
+      item.Qk=status_cur.rs_signal.second.rely_k;
+      item.Vj=status_cur.rs_signal.second.data_j;
+      item.Vk=status_cur.rs_signal.second.data_k;
+      item.A=item.ins.imm;
+    }else if(item.ins.type==Optype::I){
+      item.Qj=status_cur.rs_signal.second.rely_j;
+      item.Vj=status_cur.rs_signal.second.data_j;
+      item.Qk=-1;
+      item.A=item.ins.imm;
+    }else{
+      throw "wrong type";
+    }
+    item.ready=false;
+    if(item.Qj==-1&&item.Qk==-1){
+      item.ready=true;
+    }
+    int pos=items.insert(item);
+  }
+  
+
+
+
   for(int i=0;i<items.MAX_SIZE_();i++){
     if(!items.exist(i)){
       continue;
@@ -56,6 +93,10 @@ void Reservation_station::execute(Status&status_cur,Status&status_next){
       case Optype::I:
         signal.input1=item.Vj;
         signal.input2=item.ins.imm;
+        break;
+      case Optype::B:
+        signal.input1=item.Vj;
+        signal.input2=item.Vk;
         break;
       default:
         throw "wrong type";

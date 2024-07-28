@@ -48,6 +48,11 @@ void Instruction_unit::execute(Status&status_cur,Status&status_next)
     }else if(status_cur.ins.type==Optype::J){
       status_next.pc = status_cur.pc+status_cur.ins.imm;
     }else if(status_cur.ins.opt==Opt::JALR){
+      //we can't predict it until we know the value of rs1
+      if(!ins_q.empty()||!status_cur.rob_clear||!status_cur.rob_signal.first){
+        status_next.pc=status_cur.pc;
+        return ;
+      }
       status_next.pc = status_cur.regs.reg[status_cur.ins.rs1]+status_cur.ins.imm;
     }else{
       status_next.pc=status_cur.pc+4;
@@ -78,7 +83,6 @@ void get_ins(Status &status,Ins &ins)
   status.opcode = status.memory_->fetch_32(status.pc);
   decode(status.opcode,ins);
 }
-
 void decode(DataType input, Ins &ins)
 {
   uint32_t opcode = input & 0x7F;

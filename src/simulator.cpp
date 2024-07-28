@@ -7,28 +7,60 @@ namespace cpu{
 Simulator::Simulator()
 {
   clock_=0;
-  memory=new Memory();
+  memory=new Memory(&mem_bus);
   units[1] = new Instruction_unit();
-  units[2] = new Arithmetic_logic_unit();
-  units[3] = new Load_store_buffer();
-  units[4] = new Reorder_buffer();
-  units[0] = new Reservation_station();
-
+  units[2] = new Arithmetic_logic_unit(&cd_bus);
+  units[3] = new Load_Store_buffer(&cd_bus,&mem_bus);
+  units[4] = new Reorder_buffer(&cd_bus);
+  units[0] = new Reservation_station(&cd_bus);
+}
+Simulator::~Simulator()
+{
+  delete memory;
+  for(int i=0;i<5;i++){
+    delete units[i];
+  }
+}
+void Simulator::init(AddrType start_addr)
+{
+  memory->init();
+  //auto init
+  status_cur.init(start_addr,memory);
+  cd_bus.clear();
+  mem_bus.clear();
 
 }
+void Simulator::onecircle()
+{
+  //step 1
+  execute();
+  step();
+  cd_bus.clear();
+  if(status_next.roll_back){
+    mem_bus.clear();
+    return;
+  }
+  //step 4
+  clock_++;
+}
+void Simulator::run()
+{
+  init(0);
+  while(!status_cur.halt){
+    onecircle();
+  }
 }
 
+}
 
-
-
-
-
+/*
 //---------------------------------------------------------
 // *** Naive_Simulator ***
 namespace cpu{
 Naive_Simulator::Naive_Simulator()
 {
   memory_unit = new Memory();
+  // maybe i need a naive memory version
 }
 Naive_Simulator::~Naive_Simulator()
 {
@@ -206,7 +238,7 @@ void Naive_Simulator::step()
 
 
 
-
 }
+*/
 
 

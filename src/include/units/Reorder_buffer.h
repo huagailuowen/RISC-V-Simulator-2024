@@ -2,13 +2,15 @@
 #define REORDER_BUFFER_H
 #include"Base_unit.h"
 #include"../utility/circular_queue.h"
+#include "utility/config.h"
 #include "utility/util.h"
+#include"Bus.h"
 class Status;
 namespace cpu{
 enum class ROB_state{
-  READY,
-  
-  FINISHED
+  STORING,//the initial state
+  EXCUTING,//have sent to the specific unit, waiting for the result(cd_bus feedback)
+  FINISHED//only finished can be committed 
 };
 struct ROB_item{
   Ins ins;
@@ -20,7 +22,7 @@ struct ROB_item{
 
 class Reorder_buffer:public Base_unit{
 public:
-  Reorder_buffer();
+  Reorder_buffer(Bus<CD_BUS_SIZE>*cd_bus);
   ~Reorder_buffer();
   void step(Status&status_cur,Status&status_next);  
   void execute(Status&status_cur,Status&status_next);
@@ -28,7 +30,7 @@ public:
 private:
   void update_state(Status&status_cur,Status&status_next);
   CircleQueue<ROB_item> rob;
-
+  Bus<CD_BUS_SIZE>* cd_bus;
 };
 }
 #endif

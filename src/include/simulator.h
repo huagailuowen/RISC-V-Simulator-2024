@@ -11,6 +11,7 @@
 #include "units/Reorder_buffer.h"
 #include "units/Reservation_station.h"
 #include"units/Branch_predict.h"
+#include <utility>
 
 
 // Your code goes here
@@ -19,6 +20,8 @@ namespace cpu{
 struct RS_signal{
   Ins ins;
   int dest;
+  DataType data_j,data_k;
+  int rely_j{-1},rely_k{-1};
 };
 struct Store_Permission_signal{
   int dest;
@@ -26,6 +29,8 @@ struct Store_Permission_signal{
 struct LSB_signal{
   Ins ins;
   int dest;
+  DataType data_j,data_k;
+  int rely_j{-1},rely_k{-1};
 };
 struct ALU_signal{
   Opt op;
@@ -43,18 +48,42 @@ struct Status{
   DataType opcode;
   Ins ins;
   register_file regs;
+  void clear_deep()
+  {
+    clear();
+    alu_full=false;
+    rob_full=false;
+    rob_clear=true;
+    lsb_full=false;
+  }
+  void clear()
+  {
+    ins=Ins();
+    opcode=0;
+    alu_signal.first=false;
+    rob_signal.first=false;
+    lsb_signal.first=false;
+    rs_signal.first=false;
+    sp_signal.first=false;
+
+  }
+  void step(const Status& status)
+  {
+    pc=status.pc;
+    memory_=status.memory_;
+    regs=status.regs;
+    clear();
+  }
   void init(AddrType addr,Memory* memory )
   {
     memory_=memory;
     pc=addr;
     halt=false;
     roll_back=false;
-    regs.init();
     having_predicted=false;
     predict_res=false;
-    alu_full=false;
-    alu_signal.first=false;
-    ins_stall=true;
+    ins_stall=false;
+    clear();
 
   }
   bool halt,roll_back,ins_stall;
@@ -63,8 +92,10 @@ struct Status{
   pair<bool,ROB_signal> rob_signal;//tell ROB what to do
   pair<bool,LSB_signal> lsb_signal;//tell LSB what to do
   pair<bool,RS_signal> rs_signal;//tell RS what to do
+  pair<bool,Store_Permission_signal>sp_signal;//tell LS buffer what to do
   bool alu_full;
   bool rob_full;
+  bool rob_clear;
   bool lsb_full;
   bool rs_full;
   bool having_predicted, predict_res;
@@ -74,6 +105,7 @@ struct Status{
 class Simulator{
 public:
   void run();
+  void onecircle();
   void step();
   void execute();
   //Hint: the unit will first execute then step to next state

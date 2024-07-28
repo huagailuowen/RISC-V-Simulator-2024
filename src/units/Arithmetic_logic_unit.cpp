@@ -62,11 +62,11 @@ void ALU_unit::execute(){
     output=input1<input2;
   }
   else if(op==Opt::LUI){
-    output=input1+input2;
+    output=input1;
     // throw "we will not implement this, it should be an add instruction";
   }
   else if(op==Opt::AUIPC){
-    output=input1;
+    output=input1+input2;
   }
   else if(op==Opt::BEQ){
     output=input1==input2;
@@ -120,12 +120,12 @@ void ALU_unit::execute(){
     output=(int)input1>>input2;
   }
   else if(op==Opt::JAL){
-    throw "we will not implement this.";
     output=input1+input2;
+    //PC+4
   }
   else if(op==Opt::JALR){
-    throw "we will not implement this.";
     output=input1+input2;
+    //PC+4
   }
   else if(op==Opt::LB){
     output=input1+input2;
@@ -152,8 +152,9 @@ void ALU_unit::execute(){
   }
 }
 
-Arithmetic_logic_unit::Arithmetic_logic_unit(){
+Arithmetic_logic_unit::Arithmetic_logic_unit(Bus<CD_BUS_SIZE>*cd_bus){
   add.clear();
+  this->cd_bus=cd_bus;
 }
 Arithmetic_logic_unit::~Arithmetic_logic_unit(){}
 void Arithmetic_logic_unit::step(Status&status_cur,Status&status_next){

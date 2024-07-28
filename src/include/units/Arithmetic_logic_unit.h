@@ -31,7 +31,7 @@ int get_latency(ALU_type type);
 
 class Arithmetic_logic_unit:public Base_unit{
 public:
-  Arithmetic_logic_unit();
+  Arithmetic_logic_unit(Bus<CD_BUS_SIZE>*cd_bus);
   ~Arithmetic_logic_unit();
   void step(Status&status_cur,Status&status_next);  
   void execute(Status&status_cur,Status&status_next);

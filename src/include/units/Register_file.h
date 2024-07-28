@@ -25,6 +25,23 @@ public:
       rely[i]=-1;
     }
   }
+  void clear()
+  {
+    init();
+  }
+  void get_rely(int reg_index,DataType&data,int&rely_index){
+    if(reg_index<0||reg_index>=Register_SIZE){
+      throw "wrong register index";
+    }
+    data=(rely[reg_index]==-1)?reg[reg_index]:0;
+    rely_index=rely[reg_index];
+  }
+  void set_rely(int reg_index,int rely_index){
+    if(reg_index<0||reg_index>=Register_SIZE){
+      throw "wrong register index";
+    }
+    rely[reg_index]=rely_index;
+  }
 };
 
 }
