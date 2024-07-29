@@ -107,6 +107,6 @@ void Reservation_station::execute(Status&status_cur,Status&status_next){
       //in a cycle, only one instruction can be executed
     }
   }
-  status_next.rs_full=items.size()==items.MAX_SIZE_();
+  status_next.rs_full=(int)items.size()==items.MAX_SIZE_();
 }
 }

@@ -16,15 +16,17 @@ enum class ALU_type{
 };
 class ALU_unit{
 public:
+  ALU_unit()=default;
   ALU_unit(DataType input1,DataType input2,Opt op,int dest);
   void execute();
   bool step();
   DataType output;
-  int dest;
 private:
   DataType input1,input2;
   Opt op;
   int latency;
+public:
+  int dest;
 };
 ALU_type get_ALU_type(Opt op);
 int get_latency(ALU_type type);

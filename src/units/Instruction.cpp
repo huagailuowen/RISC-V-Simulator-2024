@@ -1,7 +1,6 @@
 #include"../include/units/Instruction.h"
 #include"simulator.h"
 #include "units/Branch_predict.h"
-#include "units/Reorder_buffer.h"
 #include "utility/util.h"
 
 #include <cstdint>
@@ -9,7 +8,7 @@
 
 namespace cpu{
 
-
+Instruction_unit::~Instruction_unit(){}
 void Instruction_unit::step(Status&status_cur,Status&status_next)
 {
   if(status_next.roll_back){
@@ -34,6 +33,7 @@ void Instruction_unit::execute(Status&status_cur,Status&status_next)
   if(status_cur.ins_stall){
     status_next.pc=status_cur.pc;
   }else{
+    
     if(status_cur.ins.type==Optype::B){
       // the branch need to predict
       bool res=predictor.predict(status_cur);

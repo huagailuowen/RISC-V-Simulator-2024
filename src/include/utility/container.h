@@ -1,6 +1,5 @@
 #ifndef CONTAINER_H
 #define CONTAINER_H
-#include"config.h"
 #include <exception>
 #include <utility>
 using std::pair;
@@ -12,18 +11,18 @@ private:
   size_t size_;
 public:
   Container():size_(0){
-    for(int i=0;i<MAX_SIZE;i++){
+    for(int i=0;i<(int)MAX_SIZE;i++){
       data[i].first = false;
     }
   }
   int MAX_SIZE_(){
-    return MAX_SIZE;
+    return (int)MAX_SIZE;
   }
   int vacant_pos(){
-    if(size_>=MAX_SIZE){
+    if(size_>=(int)MAX_SIZE){
       return -1;
     }
-    for(int i=0;i<MAX_SIZE;i++){
+    for(int i=0;i<(int)MAX_SIZE;i++){
       if(!data[i].first){
         return i;
       }
@@ -31,7 +30,7 @@ public:
     return -1;
   }
   void insert(const T &x,int pos){
-    if(pos>=MAX_SIZE){
+    if(pos>=(int)MAX_SIZE){
       throw std::exception();
       throw "Out of bound";
     }
@@ -52,7 +51,7 @@ public:
     return pos;
   }
   void erase(int pos){
-    if(pos>=MAX_SIZE){
+    if(pos>=(int)MAX_SIZE){
       throw std::exception();
       throw "Out of bound";
     }
@@ -64,14 +63,25 @@ public:
     size_--;
   }
   bool exist(int pos){
-    if(pos>=MAX_SIZE){
+    if(pos>=(int)MAX_SIZE){
       throw std::exception();
       throw "Out of bound";
     }
     return data[pos].first;
   }
+  T get(int pos){
+    if(pos>=(int)MAX_SIZE){
+      throw std::exception();
+      throw "Out of bound";
+    }
+    if(!data[pos].first){
+      throw std::exception();
+      throw "Position is empty";
+    }
+    return data[pos].second;
+  }
   T &operator[](int pos){
-    if(pos>=MAX_SIZE){
+    if(pos>=(int)MAX_SIZE){
       throw std::exception();
       throw "Out of bound";
     }
@@ -91,7 +101,7 @@ public:
     return size_==MAX_SIZE;
   }
   void clear(){
-    for(int i=0;i<MAX_SIZE;i++){
+    for(int i=0;i<(int)MAX_SIZE;i++){
       data[i].first = false;
     }
     size_ = 0;

@@ -7,12 +7,12 @@
 namespace cpu{
 class Status;
 struct RS_item{
+  Ins ins;
+  bool ready;
   int Vj,Vk;
+  int A;
   int Qj,Qk;
   int dest;
-  int A;
-  bool ready;
-  Ins ins;
   RS_item():ready(false),Vj(0),Vk(0),A(0),Qj(-1),Qk(-1),dest(-1){}
   RS_item(Ins ins):ins(ins),ready(false),Vj(0),Vk(0),A(0),Qj(-1),Qk(-1),dest(-1){}
 };

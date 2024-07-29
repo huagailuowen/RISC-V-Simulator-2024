@@ -31,11 +31,11 @@ void Load_Store_buffer::update_state(Status&status_cur,Status&status_next){
         continue;
       }
       //Warning they might read the wrong information 
-      if(bus_item.addr==item.Qj){
+      if((int)bus_item.addr==item.Qj){
         item.Vj=bus_item.data;
         item.Qj=-1;
       }
-      if(bus_item.addr==item.Qk){
+      if((int)bus_item.addr==item.Qk){
         item.Vk=bus_item.data;
         item.Qk=-1;
       }
@@ -178,6 +178,7 @@ void Load_Store_buffer::execute(Status&status_cur,Status&status_next){
           ||item.ins.opt==Opt::LW
           ||item.ins.opt==Opt::LBU
           ||item.ins.opt==Opt::LHU){
+          data=0;
           addr=item.Vj+item.ins.imm;
           if(item.ins.opt==Opt::LB||item.ins.opt==Opt::LBU){
             status=BusType::LOAD_REQUEST_8;
@@ -205,6 +206,7 @@ void Load_Store_buffer::execute(Status&status_cur,Status&status_next){
       }else{
         throw "wrong type";
       }
+      mem_bus->insert(data,addr,status,dest);
     }
     if(is_store){
       break;

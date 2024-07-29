@@ -20,7 +20,7 @@ void get_ins(Status &status,Ins &ins);
 class Instruction_unit:public Base_unit{
 public:
 
-  Instruction_unit();
+  Instruction_unit()=default;
   ~Instruction_unit();
   void step(Status&status_cur,Status&status_next);  
   void execute(Status&status_cur,Status&status_next);

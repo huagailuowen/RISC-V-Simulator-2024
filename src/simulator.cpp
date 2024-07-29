@@ -35,6 +35,8 @@ void Simulator::onecircle()
   //step 1
   execute();
   step();
+  status_cur = status_next;
+  status_next.clear_deep();
   cd_bus.clear();
   if(status_next.roll_back){
     mem_bus.clear();
@@ -43,14 +45,28 @@ void Simulator::onecircle()
   //step 4
   clock_++;
 }
-void Simulator::run()
+int Simulator::run()
 {
   init(0);
   while(!status_cur.halt){
     onecircle();
   }
+  return status_cur.res;
 }
-
+void Simulator::step()
+{
+  for(int i=0;i<5;i++){
+    units[i]->step(status_cur,status_next);
+  }
+  memory->step(status_cur,status_next);
+}
+void Simulator::execute()
+{
+  for(int i=0;i<5;i++){
+    units[i]->execute(status_cur,status_next);
+  }
+  memory->execute(status_cur,status_next);
+}
 }
 
 /*

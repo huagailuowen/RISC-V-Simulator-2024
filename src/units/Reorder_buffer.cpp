@@ -70,7 +70,7 @@ void Reorder_buffer::execute(Status&status_cur,Status&status_next){
   //try to commit
   //if only be stored can be commited
   //can we commit more than one ins?
-  for(int i=rob.get_head(),j=rob.get_size();i!=rob.get_tail();i=(i+1)%rob.MAX_SIZE_()){
+  for(int i=rob.get_head(),j=rob.get_size();j;i=(i+1)%rob.MAX_SIZE_(),j--){
     if(rob[i].state==ROB_state::STORING){
       status_next.sp_signal.first=true;
       status_next.sp_signal.second.dest=rob[i].dest;
@@ -80,6 +80,11 @@ void Reorder_buffer::execute(Status&status_cur,Status&status_next){
       break;
     }
     auto &item=rob[i];
+    if(item.ins.opt==Opt::ADDI && item.ins.rd==10 && item.ins.rs1==0 && item.ins.imm==255){
+      status_next.halt=true;
+      status_next.res=status_cur.regs.reg[10]&0xff;
+      return;
+    }
     if(item.ins.type==Optype::B){
       if(item.ins.predict_res!=item.value){
         status_next.roll_back=true;

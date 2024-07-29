@@ -6,7 +6,7 @@
 #include"../include/units/Bus.h"
 namespace cpu{
 
-ALU_type get_ALU_type(Optype op){
+ALU_type get_ALU_type(Opt op){
   return ALU_type::ADD;
 }
 int get_latency(ALU_type type){
@@ -169,6 +169,7 @@ void Arithmetic_logic_unit::step(Status&status_cur,Status&status_next){
         throw "ALU is full";
       }
       int pos = add.insert(ALU_unit(status_next.alu_signal.second.input1,status_next.alu_signal.second.input2,status_next.alu_signal.second.op,status_next.alu_signal.second.dest));
+      pos=0;//cancel the warning
     }else{
       throw "we will not implement this";
     }

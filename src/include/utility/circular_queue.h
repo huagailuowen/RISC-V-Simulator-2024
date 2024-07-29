@@ -46,7 +46,7 @@ public:
     size = 0;
   }
   T& operator [](int pos){
-    if(pos<0||pos>=size){
+    if(pos<0||pos>=(int)size){
       throw "out of range";
     }
     return data[pos];

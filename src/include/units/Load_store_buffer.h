@@ -4,20 +4,19 @@
 #include"../utility/config.h"
 #include "units/Bus.h"
 #include "utility/circular_queue.h"
-#include "utility/container.h"
 namespace cpu{
 class Status;
 struct LSB_item{
+  Ins ins;
+  bool ready;
   int Vj,Vk;
+  int A;// can be also used as the result of loaded data
   int Qj,Qk;
   int dest;
-  int A;// can be also used as the result of loaded data
-  bool ready;
-  bool store_begin;
   bool finished;
-  Ins ins;
-  LSB_item():ready(false),Vj(0),Vk(0),A(0),Qj(-1),Qk(-1),dest(-1),finished(false){}
-  LSB_item(Ins ins):ins(ins),ready(false),Vj(0),Vk(0),A(0),Qj(-1),Qk(-1),dest(-1),finished(false){}
+  bool store_begin;
+  LSB_item():ready(false),Vj(0),Vk(0),A(0),Qj(-1),Qk(-1),dest(-1),finished(false),store_begin(false){}
+  LSB_item(Ins ins):ins(ins),ready(false),Vj(0),Vk(0),A(0),Qj(-1),Qk(-1),dest(-1),finished(false),store_begin(false){}
 };
 class Load_Store_buffer:public Base_unit{
 public:

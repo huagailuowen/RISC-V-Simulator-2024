@@ -74,7 +74,6 @@ void Memory::init(){
   }
   std::string str;
   AddrType addr;
-  bool flag=false;
   while(std::cin>>str){
     if(str[0]=='@'){
       if(str.size()!=9){

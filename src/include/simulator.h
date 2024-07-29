@@ -99,12 +99,13 @@ struct Status{
   bool lsb_full;
   bool rs_full;
   bool having_predicted, predict_res;
+  DataType res;
   Memory* memory_;
 };
 
 class Simulator{
 public:
-  void run();
+  int run();
   void onecircle();
   void step();
   void execute();
@@ -130,18 +131,18 @@ private:
 
 
 
-class Naive_Simulator{
-public:
-  int run();
-  void step();
+// class Naive_Simulator{
+// public:
+//   int run();
+//   void step();
   
-  void init(AddrType start_addr);
-  Base_unit* memory_unit;
-  Naive_Simulator();
-  ~Naive_Simulator();
-private:
-  Status status_cur,status_next;
-};  
+//   void init(AddrType start_addr);
+//   Base_unit* memory_unit;
+//   Naive_Simulator();
+//   ~Naive_Simulator();
+// private:
+//   Status status_cur,status_next;
+// };  
 
 }
 

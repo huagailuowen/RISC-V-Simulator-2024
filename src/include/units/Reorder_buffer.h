@@ -15,8 +15,9 @@ enum class ROB_state{
 struct ROB_item{
   Ins ins;
   int dest;//pos
-  DataType value;
   ROB_state state;
+  DataType value;
+  ROB_item()=default;
   ROB_item(Ins ins,int dest,ROB_state state,DataType value=0):ins(ins),dest(dest),state(state),value(value){}
 };
 

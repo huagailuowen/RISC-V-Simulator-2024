@@ -1,7 +1,6 @@
 #ifndef BUS_H
 #define BUS_H
 
-#include"../utility/config.h"
 #include "utility/container.h"
 #include "utility/util.h"
 namespace cpu{
@@ -27,6 +26,7 @@ struct Bus_item{
   //in the cd_bus, addr means the dest in the ROB
   BusType type;
   int dest;
+  Bus_item()=default;
   Bus_item(DataType data,AddrType addr,BusType type,int dest):data(data),addr(addr),type(type),dest(dest){}
 };
 template<int BUS_CAPCITY>
