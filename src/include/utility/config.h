@@ -7,6 +7,7 @@ const int Register_SIZE = 32;
 const int Memory_SIZE = 1<<20;
 const int RS_SIZE = 32;
 const int LSB_SIZE = 32;
+const int ROB_SIZE = 1;
 
 const int Cache_SIZE = 1<<15;
 

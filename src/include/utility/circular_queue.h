@@ -7,7 +7,7 @@ template <typename T,int SIZE=Queue_SIZE> class CircleQueue {
 public:
   CircleQueue() : head(0), tail(0), size(0) {}
   int push(T x) {
-    if (size == Queue_SIZE) {
+    if (size == SIZE) {
       throw std::exception();
       throw "Queue is full!";
     }
@@ -29,7 +29,7 @@ public:
       throw std::exception();
       throw "Queue is empty!";
     }
-    head = (head + 1) % Queue_SIZE;
+    head = (head + 1) % SIZE;
     size--;
   }
   bool empty() { return size == 0; }
@@ -38,7 +38,7 @@ public:
   {
     return SIZE;
   }
-  bool full() { return size == Queue_SIZE; }
+  bool full() { return size == SIZE; }
   void clear()
   {
     head = 0;
@@ -46,7 +46,7 @@ public:
     size = 0;
   }
   T& operator [](int pos){
-    if(pos<0||pos>=(int)size){
+    if(pos<0||pos>=(int)SIZE){
       throw "out of range";
     }
     return data[pos];

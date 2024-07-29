@@ -1,5 +1,6 @@
 #include"../include/units/Reorder_buffer.h"
 #include"simulator.h"
+#include<iostream>
 #include "utility/util.h"
 namespace cpu{
 
@@ -11,12 +12,17 @@ Reorder_buffer::~Reorder_buffer(){}
 void Reorder_buffer::step(Status&status_cur,Status&status_next){
   if(status_next.roll_back){
     rob.clear();
-    status_next.rob_full=false;
+    // status_next.rob_full=false;
+    status_next.rob_near_full=(rob.get_size()+1>=rob.MAX_SIZE_());
+    status_next.rob_full=rob.full();
     status_next.rob_clear=true;
     return;
   }
   //begin to use the cd_bus to update the status_next
-  status_next.rob_full=rob.full();
+  // status_next.rob_full=rob.full();
+  status_next.rob_near_full=(rob.get_size()+1>=rob.MAX_SIZE_());
+
+  status_next.rob_clear=rob.empty();
   //we should change the ROB_state from EXCUTING to FINISHED 
   for(int i=0;i<cd_bus->MAX_SIZE_();i++){
     if(!cd_bus->exist(i)){
@@ -32,7 +38,7 @@ void Reorder_buffer::step(Status&status_cur,Status&status_next){
         rob[pos].state=ROB_state::FINISHED;
       }
       
-    }else if(rob[pos].state==ROB_state::STORING){
+    }else if(rob[pos].state==ROB_state::WAITING){
       if(rob[pos].ins.type==Optype::S){
         rob[pos].state=ROB_state::FINISHED;
       }else{
@@ -40,6 +46,41 @@ void Reorder_buffer::step(Status&status_cur,Status&status_next){
       }
     }else{
       throw "ROB state error";
+    }
+  }
+
+  if(status_next.rs_signal.first){
+    auto & signal=status_next.rs_signal.second;
+    if(signal.rely_j!=-1){
+      //rely_j must in the rob
+      if(rob[signal.rely_j].state==ROB_state::FINISHED){
+        signal.data_j=rob[signal.rely_j].value;
+        signal.rely_j=-1;
+      }
+    }
+    if(signal.rely_k!=-1){
+      //rely_k must in the rob
+      if(rob[signal.rely_k].state==ROB_state::FINISHED){
+        signal.data_k=rob[signal.rely_k].value;
+        signal.rely_k=-1;
+      }
+    }
+  }
+  if(status_next.lsb_signal.first){
+    auto & signal=status_next.lsb_signal.second;
+    if(signal.rely_j!=-1){
+      //rely_j must in the rob
+      if(rob[signal.rely_j].state==ROB_state::FINISHED){
+        signal.data_j=rob[signal.rely_j].value;
+        signal.rely_j=-1;
+      }
+    }
+    if(signal.rely_k!=-1){
+      //rely_k must in the rob
+      if(rob[signal.rely_k].state==ROB_state::FINISHED){
+        signal.data_k=rob[signal.rely_k].value;
+        signal.rely_k=-1;
+      }
     }
   }
   
@@ -59,7 +100,7 @@ bool is_ls(const Ins &ins){
 bool is_rs(const Ins &ins){
   auto &op=ins.opt;
   return ins.type==Optype::R
-    ||(ins.type==Optype::I&&!is_ls(ins)&&op!=Opt::JALR)
+    ||(ins.type==Optype::I&&!is_ls(ins))
     ||ins.type==Optype::B
     ||ins.type==Optype::U
     ||ins.type==Optype::J;
@@ -74,6 +115,7 @@ void Reorder_buffer::execute(Status&status_cur,Status&status_next){
     if(rob[i].state==ROB_state::STORING){
       status_next.sp_signal.first=true;
       status_next.sp_signal.second.dest=rob[i].dest;
+      rob[i].state=ROB_state::WAITING;
       break;
     }
     if(rob[i].state!=ROB_state::FINISHED){
@@ -94,11 +136,19 @@ void Reorder_buffer::execute(Status&status_cur,Status&status_next){
         return;
       }
     }else if(item.ins.type==Optype::I||item.ins.type==Optype::J||item.ins.type==Optype::U||item.ins.type==Optype::R){
-      status_cur.regs.reg[item.ins.rd]=item.value;
+      if(item.ins.rd!=0){
+        status_cur.regs.reg[item.ins.rd]=item.value;
+      }else{
+        status_cur.regs.reg[item.ins.rd]=0;
+        if(status_cur.regs.rely[item.ins.rd]!=-1){
+          throw "you can't change r0";
+        }
+      }
       if(status_cur.regs.rely[item.ins.rd]==item.dest){
         status_cur.regs.rely[item.ins.rd]=-1;
       }
     }
+    rob.pop();
 
     break;
     //only commit one
@@ -118,6 +168,11 @@ void Reorder_buffer::execute(Status&status_cur,Status&status_next){
     int dest=rob.get_tail( );
     ROB_state state=ROB_state::EXCUTING;
     Ins ins=status_cur.rob_signal.second.ins;
+    
+    if(ins.pc_addr==4100){
+      int kk=0;
+    }
+    std::cerr<<"pushing ins "<<ins.pc_addr<<std::endl;
     rob.push(ROB_item(ins,dest,state));
     if(is_ls(ins)){
       status_next.lsb_signal.first=true;
@@ -131,6 +186,8 @@ void Reorder_buffer::execute(Status&status_cur,Status&status_next){
         status_next.lsb_signal.second.data_k=0;
         status_next.lsb_signal.second.rely_k=-1;
       }
+      
+
     }else if(is_rs(ins)){
       status_next.rs_signal.first=true;
       status_next.rs_signal.second.ins=ins;
@@ -165,8 +222,16 @@ void Reorder_buffer::execute(Status&status_cur,Status&status_next){
         status_next.rs_signal.second.data_k=0;
         status_next.rs_signal.second.rely_k=-1;
       }
+      
+
     }
+
+    if(ins.rd!=0&&ins.type!=Optype::B&&ins.type!=Optype::S){
+      status_cur.regs.rely[ins.rd]=dest;
+    }
+
   }
+  status_next.rob_near_full=(rob.get_size()+1>=rob.MAX_SIZE_());
   status_next.rob_full=rob.full();
   status_next.rob_clear=rob.empty();
 }

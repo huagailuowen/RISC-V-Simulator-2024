@@ -1,6 +1,8 @@
 #include "../include/utility/util.h"
 #include <cstdint>
 #include <sys/types.h>
+#include <cassert> // Add this line to include the <cassert> header file
+
 namespace cpu{
 
 uint32_t sign_ext(uint32_t x, int bit){

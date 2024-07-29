@@ -1,6 +1,7 @@
 #include"../include/units/Memory.h"
 #include"simulator.h"
 #include "utility/config.h"
+#include "utility/util.h"
 #include <cstring>
 #include <exception>
 #include <iostream>
@@ -27,21 +28,21 @@ DataType Memory::fetch_32(int pos){
     throw std::exception();
     throw "Memory out of bound";
   }
-  return ram[pos]|(ram[pos+1]<<8)|(ram[pos+2]<<16)|(ram[pos+3]<<24);
+  return (DataType)ram[pos]|((DataType)ram[pos+1]<<8)|((DataType)ram[pos+2]<<16)|((DataType)ram[pos+3]<<24);
 }
 DataType Memory::fetch_16(int pos){
   if(pos<0||pos+1>=Memory_SIZE){
     throw std::exception();
     throw "Memory out of bound";
   }
-  return ram[pos]|(ram[pos+1]<<8);
+  return (DataType)ram[pos]|((DataType)ram[pos+1]<<8);
 }
 DataType Memory::fetch_8(int pos){
   if(pos<0||pos>=Memory_SIZE){
     throw std::exception();
     throw "Memory out of bound";
   }
-  return ram[pos];
+  return (DataType)ram[pos];
 }
 void Memory::store_32(int pos,DataType data){
   if(pos<0||pos+3>=Memory_SIZE){

@@ -47,6 +47,9 @@ void Load_Store_buffer::update_state(Status&status_cur,Status&status_next){
   //monitor the mem_bus
   for(int i=items.get_head(),j=items.get_size();j;i=(i+1)%items.MAX_SIZE_(),j--){
     auto &item=items[i];
+    if(item.ins.pc_addr==4100){
+            int kk=0;
+          }
     for(int j=0;j<mem_bus->MAX_SIZE_();j++){
       if(!mem_bus->exist(j)){
         continue;
@@ -54,7 +57,11 @@ void Load_Store_buffer::update_state(Status&status_cur,Status&status_next){
       auto bus_item=mem_bus->get(j);
       if(bus_item.dest==item.dest){
         if(bus_item.type==BusType::STORE_FINISHED||bus_item.type==BusType::LOAD_FINISHED){
+          if(item.ins.pc_addr==4100){
+            int kk=0;
+          }
           item.finished=true;
+          mem_bus->erase(j);
         }
         if(bus_item.type==BusType::LOAD_FINISHED){
           item.A=bus_item.data;
@@ -84,6 +91,7 @@ void Load_Store_buffer::execute(Status&status_cur,Status&status_next){
     }
     LSB_item item(status_cur.lsb_signal.second.ins);
     item.dest=status_cur.lsb_signal.second.dest;
+    
     if(item.ins.type==Optype::S){
       item.Qj=status_cur.lsb_signal.second.rely_j;
       item.Qk=status_cur.lsb_signal.second.rely_k;
@@ -99,6 +107,7 @@ void Load_Store_buffer::execute(Status&status_cur,Status&status_next){
       throw "wrong type";
     }
     item.ready=false;
+    item.ls_begin=false;
     if(item.Qj==-1&&item.Qk==-1){
       item.ready=true;
     }
@@ -132,6 +141,9 @@ void Load_Store_buffer::execute(Status&status_cur,Status&status_next){
       items.pop();
     }
   }
+  if(status_cur.sp_signal.first){
+    int i=1;
+  }
   if(items.empty()){
     if(status_cur.sp_signal.first){
       throw "wrong signal";
@@ -141,8 +153,8 @@ void Load_Store_buffer::execute(Status&status_cur,Status&status_next){
   status_next.lsb_full=items.full();
   bool is_store=items[items.get_head()].ins.type==Optype::S;
   if(is_store){
-    if(!items[items.get_head()].store_begin){
-      items[items.get_head()].store_begin=true;
+    if(!items[items.get_head()].ls_begin){
+      items[items.get_head()].ls_begin=true;
       cd_bus->insert(0,0,BusType::TRY_TO_STORE,items[items.get_head()].dest);
       return;
     }
@@ -162,10 +174,19 @@ void Load_Store_buffer::execute(Status&status_cur,Status&status_next){
       break;
     }
     //partly ramdom sequence
+    
     if(item.ready){
       //send mem_signal
+      
       if(mem_bus->full()){
         break;
+      }
+      if(item.ins.type==Optype::I){
+        if(item.ls_begin){
+          continue;
+        }else{
+          item.ls_begin=true;
+        }
       }
       DataType data;
       // store rs2

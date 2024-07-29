@@ -55,11 +55,16 @@ struct Status{
     rob_full=false;
     rob_clear=true;
     lsb_full=false;
+    rs_full=false;
+    roll_back=false;
+    having_predicted=false;
+    predict_res=false;
   }
   void clear()
   {
     ins=Ins();
     opcode=0;
+
     alu_signal.first=false;
     rob_signal.first=false;
     lsb_signal.first=false;
@@ -94,6 +99,8 @@ struct Status{
   pair<bool,RS_signal> rs_signal;//tell RS what to do
   pair<bool,Store_Permission_signal>sp_signal;//tell LS buffer what to do
   bool alu_full;
+  // bool rob_full;
+  bool rob_near_full;
   bool rob_full;
   bool rob_clear;
   bool lsb_full;

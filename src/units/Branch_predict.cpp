@@ -6,8 +6,7 @@ Branch_predict::Branch_predict(){
   // TO DO
 }
 bool Branch_predict::predict(Status &status){
-  Ins ins;
-  get_ins(status,ins);
+  Ins ins=status.ins;
   if(ins.type!=Optype::B){
     throw "Invalid instruction";
   }

@@ -8,7 +8,8 @@
 class Status;
 namespace cpu{
 enum class ROB_state{
-  STORING,//the initial state
+  STORING,
+  WAITING,
   EXCUTING,//have sent to the specific unit, waiting for the result(cd_bus feedback)
   FINISHED//only finished can be committed 
 };
@@ -30,7 +31,7 @@ public:
   void commit();
 private:
   void update_state(Status&status_cur,Status&status_next);
-  CircleQueue<ROB_item> rob;
+  CircleQueue<ROB_item,ROB_SIZE> rob;
   Bus<CD_BUS_SIZE>* cd_bus;
 };
 }

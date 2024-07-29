@@ -55,6 +55,10 @@ public:
   {
     return items.exist(pos);
   }
+  void erase(int pos)
+  {
+    items.erase(pos);
+  }
   Bus_item get(int pos)
   {
     return items.get(pos);

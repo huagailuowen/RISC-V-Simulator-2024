@@ -3,6 +3,7 @@
 
 #include "include/units/Instruction.h"
 #include "include/utility/util.h"
+#include "utility/config.h"
 namespace cpu{
 Simulator::Simulator()
 {
@@ -26,6 +27,8 @@ void Simulator::init(AddrType start_addr)
   memory->init();
   //auto init
   status_cur.init(start_addr,memory);
+  status_next=status_cur;
+  status_next.clear_deep();
   cd_bus.clear();
   mem_bus.clear();
 
@@ -35,23 +38,40 @@ void Simulator::onecircle()
   //step 1
   execute();
   step();
+  status_next.regs= status_cur.regs;
+  //use the same regs
+  //the message in register file is always right
   status_cur = status_next;
+  clock_++;
   status_next.clear_deep();
   cd_bus.clear();
-  if(status_next.roll_back){
+  //now the next become the current
+  if(status_cur.roll_back){
     mem_bus.clear();
+    for(int i=0;i<Register_SIZE;i++){
+      status_cur.regs.rely[i]=-1;
+      status_next.regs.rely[i]=-1;
+    }
     return;
+  }else{
+    // for(int i=0;i<MEM_BUS_SIZE;i++){
+    //   if(mem_bus.exist(i)){
+    //     if(mem_bus.get(i).type==BusType::LOAD_FINISHED||mem_bus.get(i).type==BusType::STORE_FINISHED){
+    //       mem_bus.erase(i);
+    //     }
+    //   }
+    // }
   }
   //step 4
-  clock_++;
 }
 int Simulator::run()
 {
-  init(0);
+  // init(0);
+  //you can't init twice
   while(!status_cur.halt){
     onecircle();
   }
-  return status_cur.res;
+  return status_cur.res&255;
 }
 void Simulator::step()
 {

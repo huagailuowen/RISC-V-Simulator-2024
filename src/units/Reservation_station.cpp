@@ -1,5 +1,6 @@
 #include"../include/units/Reservation_station.h"
 #include"simulator.h"
+#include "utility/util.h"
 namespace cpu{
 Reservation_station::Reservation_station(Bus<CD_BUS_SIZE>*cd_bus){
   items.clear();
@@ -92,17 +93,29 @@ void Reservation_station::execute(Status&status_cur,Status&status_next){
         break;
       case Optype::I:
         signal.input1=item.Vj;
-        signal.input2=item.ins.imm;
+        signal.input2=(item.ins.opt==Opt::JALR)?item.Vk:item.ins.imm;
         break;
       case Optype::B:
         signal.input1=item.Vj;
         signal.input2=item.Vk;
         break;
+      case Optype::U:
+        signal.input1=item.Vj;
+        signal.input2=item.Vk;
+        break;
+      case Optype::J:
+        signal.input1=item.Vj;
+        signal.input2=item.Vk;
+        break;
+      
+      
       default:
         throw "wrong type";
         break;
       }
       items.erase(i);
+      status_next.alu_signal.first=true;
+      status_next.alu_signal.second=signal;
       break;
       //in a cycle, only one instruction can be executed
     }

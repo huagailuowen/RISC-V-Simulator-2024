@@ -15,11 +15,22 @@ void Instruction_unit::step(Status&status_cur,Status&status_next)
     ins_q.clear();
   }
   //at very first it should be empty, so ins_stall == true
+  // status_next.ins_stall=false;
+  // if(ins_q.full()){
+  //   status_next.ins_stall=true;
+  // }else{
+  //   status_next.ins_stall=false;
+  // }
   if(status_cur.ins_stall){
     return;
   }
   if(ins_q.full()){
+    status_next.pc=status_cur.pc;
+    return;
     throw "Instruction queue is full";
+  }
+  if(status_cur.ins.pc_addr==4112){
+    int i=0;
   }
   ins_q.push(status_cur.ins);
 }
@@ -49,8 +60,10 @@ void Instruction_unit::execute(Status&status_cur,Status&status_next)
       status_next.pc = status_cur.pc+status_cur.ins.imm;
     }else if(status_cur.ins.opt==Opt::JALR){
       //we can't predict it until we know the value of rs1
-      if(!ins_q.empty()||!status_cur.rob_clear||!status_cur.rob_signal.first){
+      if(!ins_q.empty()||!status_cur.rob_clear||status_cur.rob_signal.first){
         status_next.pc=status_cur.pc;
+        status_cur.ins_stall=true;
+        launch(status_cur, status_next);
         return ;
       }
       status_next.pc = status_cur.regs.reg[status_cur.ins.rs1]+status_cur.ins.imm;
@@ -66,6 +79,9 @@ void Instruction_unit::launch(Status&status_cur,Status&status_next)
     return;
   }
   if(status_cur.rob_full){
+    return;
+  }
+  if(status_cur.rob_near_full&&status_cur.rob_signal.first){
     return;
   }
   Ins ins = ins_q.front();
