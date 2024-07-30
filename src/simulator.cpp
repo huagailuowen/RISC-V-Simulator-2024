@@ -52,6 +52,12 @@ void Simulator::onecircle()
   //now the next become the current
   if(status_cur.roll_back){
     mem_bus.clear();
+    status_cur.rob_signal.first=false;
+    status_cur.rs_signal.first=false;
+    status_cur.lsb_signal.first=false;
+    status_cur.sp_signal.first=false;
+    status_cur.alu_signal.first=false;
+    
     for(int i=0;i<Register_SIZE;i++){
       status_cur.regs.rely[i]=-1;
       status_next.regs.rely[i]=-1;

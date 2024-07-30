@@ -34,6 +34,9 @@ void Reorder_buffer::step(Status&status_cur,Status&status_next){
     rob[pos].value=item.data;
     if(rob[pos].state==ROB_state::EXCUTING){
       if(rob[pos].ins.type==Optype::S){
+        if(rob[pos].ins.pc_addr==4168){
+          int ppp=0;
+        }
         rob[pos].state=ROB_state::STORING;
       }else{
         rob[pos].state=ROB_state::FINISHED;
@@ -114,6 +117,7 @@ void Reorder_buffer::execute(Status&status_cur,Status&status_next){
   //can we commit more than one ins?
   for(int i=rob.get_head(),j=rob.get_size();j;i=(i+1)%rob.MAX_SIZE_(),j--){
     if(rob[i].state==ROB_state::STORING){
+      
       status_next.sp_signal.first=true;
       status_next.sp_signal.second.dest=rob[i].dest;
       rob[i].state=ROB_state::WAITING;
@@ -127,6 +131,9 @@ void Reorder_buffer::execute(Status&status_cur,Status&status_next){
       status_next.halt=true;
       status_next.res=status_cur.regs.reg[10]&0xff;
       return;
+    }
+    if(naive_sim->round+1==61){
+      int p=0;
     }
     if(item.ins.type==Optype::B){
       if(item.ins.predict_res!=item.value){
@@ -150,10 +157,8 @@ void Reorder_buffer::execute(Status&status_cur,Status&status_next){
       }
       
     }
+    
 #ifdef DEBUG
-    if(item.ins.pc_addr==4352){
-      int p=0;
-    }
     std::cerr<<"Round: "<<naive_sim->round+1<<','<<item.ins.pc_addr<<':'<<naive_sim->status_cur.pc<<std::endl;
     for(int i=0;i<Register_SIZE;i++){
       std::cerr<<status_cur.regs.reg[i]<<" ";
@@ -166,16 +171,32 @@ void Reorder_buffer::execute(Status&status_cur,Status&status_next){
     
     if(naive_sim->status_cur.pc!=item.ins.pc_addr){
       std::cerr<<"pc error"<<std::endl;
+      for(int i=0;i<Register_SIZE;i++){
+        std::cerr<<status_cur.regs.reg[i]<<" ";
+      }
+      std::cerr<<std::endl;
+      for(int i=0;i<Register_SIZE;i++){
+        std::cerr<<naive_sim->status_cur.regs.reg[i]<<" ";
+      }
+      std::cerr<<std::endl;
       throw "pc error";
     }
+#endif
     naive_sim->step();
     for(int i=0;i<Register_SIZE;i++){
       if(status_cur.regs.reg[i]!=naive_sim->status_cur.regs.reg[i]){
-        std::cerr<<"rely error"<<std::endl;
-        throw "rely error";
+        std::cerr<<"reg error"<<std::endl;
+        for(int i=0;i<Register_SIZE;i++){
+          std::cerr<<status_cur.regs.reg[i]<<" ";
+        }
+        std::cerr<<std::endl;
+        for(int i=0;i<Register_SIZE;i++){
+          std::cerr<<naive_sim->status_cur.regs.reg[i]<<" ";
+        }
+        std::cerr<<std::endl;
+        throw "reg error";
       }
     }
-#endif
     rob.pop();
 
     break;
@@ -201,6 +222,9 @@ void Reorder_buffer::execute(Status&status_cur,Status&status_next){
     std::cerr<<"pushing ins "<<ins.pc_addr<<std::endl;
 #endif
     rob.push(ROB_item(ins,dest,state));
+    if(ins.pc_addr==4168){
+      int ppp=0;
+    }
     if(is_ls(ins)){
       status_next.lsb_signal.first=true;
       status_next.lsb_signal.second.ins=ins;
@@ -224,21 +248,21 @@ void Reorder_buffer::execute(Status&status_cur,Status&status_next){
         status_cur.regs.get_rely(ins.rs2,status_next.rs_signal.second.data_k,status_next.rs_signal.second.rely_k);
       }else if(ins.opt==Opt::JALR||ins.opt==Opt::JAL){
         status_next.rs_signal.second.data_j=ins.pc_addr;
-        status_next.rs_signal.second.rely_k=-1;
+        status_next.rs_signal.second.rely_j=-1;
   
         status_next.rs_signal.second.data_k=4;
         status_next.rs_signal.second.rely_k=-1;
 
       }else if(ins.opt==Opt::AUIPC){
         status_next.rs_signal.second.data_j=ins.pc_addr;
-        status_next.rs_signal.second.rely_k=-1;
+        status_next.rs_signal.second.rely_j=-1;
   
         status_next.rs_signal.second.data_k=ins.imm;
         status_next.rs_signal.second.rely_k=-1;
 
       }else if(ins.opt==Opt::LUI){
         status_next.rs_signal.second.data_j=ins.imm;
-        status_next.rs_signal.second.rely_k=-1;
+        status_next.rs_signal.second.rely_j=-1;
   
         status_next.rs_signal.second.data_k=0;
         status_next.rs_signal.second.rely_k=-1;

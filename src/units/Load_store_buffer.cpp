@@ -27,15 +27,18 @@ void Load_Store_buffer::update_state(Status&status_cur,Status&status_next){
         continue;
       }
       auto bus_item=cd_bus->get(j);
+      if(item.ins.pc_addr==4168){
+        int ppp=0;
+      }
       if(bus_item.type!=BusType::COMPUTE_FINISHED&&bus_item.type!=BusType::LOAD_FINISHED){
         continue;
       }
       //Warning they might read the wrong information 
-      if((int)bus_item.addr==item.Qj){
+      if((int)bus_item.dest==item.Qj){
         item.Vj=bus_item.data;
         item.Qj=-1;
       }
-      if((int)bus_item.addr==item.Qk){
+      if((int)bus_item.dest==item.Qk){
         item.Vk=bus_item.data;
         item.Qk=-1;
       }
@@ -153,6 +156,13 @@ void Load_Store_buffer::execute(Status&status_cur,Status&status_next){
   status_next.lsb_full=items.full();
   bool is_store=items[items.get_head()].ins.type==Optype::S;
   if(is_store){
+    auto item = items[items.get_head()];
+    if(item.ins.pc_addr==4168){
+      int ppp=0;
+    }
+    if(!items[items.get_head()].ready){
+      return;
+    }
     if(!items[items.get_head()].ls_begin){
       items[items.get_head()].ls_begin=true;
       cd_bus->insert(0,0,BusType::TRY_TO_STORE,items[items.get_head()].dest);
