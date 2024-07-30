@@ -3,6 +3,7 @@
 
 namespace cpu{
 
+const int PREDICT_COUNTER_SIZE = 32;
 const int Register_SIZE = 32;
 const int Memory_SIZE = 1<<20;
 const int RS_SIZE = 32;

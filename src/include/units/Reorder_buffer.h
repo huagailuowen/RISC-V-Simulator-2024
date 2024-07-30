@@ -2,6 +2,7 @@
 #define REORDER_BUFFER_H
 #include"Base_unit.h"
 #include"../utility/circular_queue.h"
+#include "units/Branch_predict.h"
 #include "utility/config.h"
 #include "utility/util.h"
 #include"Bus.h"
@@ -24,7 +25,7 @@ struct ROB_item{
 
 class Reorder_buffer:public Base_unit{
 public:
-  Reorder_buffer(Bus<CD_BUS_SIZE>*cd_bus);
+  Reorder_buffer(Bus<CD_BUS_SIZE>*cd_bus,Branch_predict* branch_predict);
   ~Reorder_buffer();
   void step(Status&status_cur,Status&status_next);  
   void execute(Status&status_cur,Status&status_next);
@@ -33,6 +34,7 @@ private:
   void update_state(Status&status_cur,Status&status_next);
   CircleQueue<ROB_item,ROB_SIZE> rob;
   Bus<CD_BUS_SIZE>* cd_bus;
+  Branch_predict* branch_predict;
 
 };
 }

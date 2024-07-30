@@ -1,13 +1,15 @@
 #include"../include/units/Reorder_buffer.h"
 #include"simulator.h"
 #include<iostream>
+#include "units/Branch_predict.h"
 #include "utility/config.h"
 #include "utility/util.h"
 namespace cpu{
 extern Naive_Simulator* naive_sim;
-Reorder_buffer::Reorder_buffer(Bus<CD_BUS_SIZE>*cd_bus)
+Reorder_buffer::Reorder_buffer(Bus<CD_BUS_SIZE>*cd_bus,Branch_predict* branch_predict)
 {
   this->cd_bus=cd_bus;
+  this->branch_predict=branch_predict;
 }
 Reorder_buffer::~Reorder_buffer(){}
 void Reorder_buffer::step(Status&status_cur,Status&status_next){
@@ -136,6 +138,7 @@ void Reorder_buffer::execute(Status&status_cur,Status&status_next){
       int p=0;
     }
     if(item.ins.type==Optype::B){
+      branch_predict->update(item.ins.pc_addr,item.value,item.ins.predict_res==item.value);
       if(item.ins.predict_res!=item.value){
         status_next.roll_back=true;
         status_next.pc=item.ins.pc_addr;
@@ -181,7 +184,6 @@ void Reorder_buffer::execute(Status&status_cur,Status&status_next){
       std::cerr<<std::endl;
       throw "pc error";
     }
-#endif
     naive_sim->step();
     for(int i=0;i<Register_SIZE;i++){
       if(status_cur.regs.reg[i]!=naive_sim->status_cur.regs.reg[i]){
@@ -197,6 +199,7 @@ void Reorder_buffer::execute(Status&status_cur,Status&status_next){
         throw "reg error";
       }
     }
+#endif
     rob.pop();
 
     break;

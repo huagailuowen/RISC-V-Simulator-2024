@@ -25,6 +25,7 @@ public:
   void step(Status&status_cur,Status&status_next);  
   void execute(Status&status_cur,Status&status_next);
   void launch(Status&status_cur,Status&status_next);
+  Branch_predict* get_predictor();
 private:
   CircleQueue<Ins>ins_q;
   Branch_predict predictor;

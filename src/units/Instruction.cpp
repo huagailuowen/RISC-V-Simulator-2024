@@ -7,7 +7,10 @@
 #include <sys/types.h>
 
 namespace cpu{
-
+Branch_predict* Instruction_unit::get_predictor()
+{
+  return &predictor;
+}
 Instruction_unit::~Instruction_unit(){}
 void Instruction_unit::step(Status&status_cur,Status&status_next)
 {

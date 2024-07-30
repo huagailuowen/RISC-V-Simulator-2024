@@ -3,6 +3,7 @@
 
 #include "include/units/Instruction.h"
 #include "include/utility/util.h"
+#include "units/Branch_predict.h"
 #include "units/Memory.h"
 #include "utility/config.h"
 namespace cpu{
@@ -10,11 +11,12 @@ Simulator::Simulator()
 {
   clock_=0;
   memory=new Memory(&mem_bus);
-  units[1] = new Instruction_unit();
-  units[2] = new Arithmetic_logic_unit(&cd_bus);
-  units[3] = new Load_Store_buffer(&cd_bus,&mem_bus);
-  units[4] = new Reorder_buffer(&cd_bus);
-  units[0] = new Reservation_station(&cd_bus);
+  units[4] = new Instruction_unit();
+  Branch_predict* branch_predict = dynamic_cast<Instruction_unit*>(units[4])->get_predictor();
+  units[1] = new Arithmetic_logic_unit(&cd_bus);
+  units[0] = new Load_Store_buffer(&cd_bus,&mem_bus);
+  units[2] = new Reorder_buffer(&cd_bus,branch_predict);
+  units[3] = new Reservation_station(&cd_bus);
   naive_simulator=new Naive_Simulator();
 }
 Simulator::~Simulator()
@@ -85,7 +87,7 @@ int Simulator::run()
 }
 void Simulator::step()
 {
-  for(int i=0;i<5;i++){
+  for(int i=4;i>=0;i--){
     units[i]->step(status_cur,status_next);
   }
   memory->step(status_cur,status_next);
