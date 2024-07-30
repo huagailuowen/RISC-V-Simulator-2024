@@ -32,13 +32,19 @@ void Instruction_unit::step(Status&status_cur,Status&status_next)
   if(status_cur.ins.pc_addr==4112){
     int i=0;
   }
-  ins_q.push(status_cur.ins);
+  if(!status_next.roll_back){
+    ins_q.push(status_cur.ins);
+  }
 }
 void Instruction_unit::execute(Status&status_cur,Status&status_next)
 {
 
   //there the ins of status_cur is decoded and put into ins_q
   //it has readly been done in the outer Simulator
+  if(status_next.roll_back){
+    return;
+    //restart and not change the right pc any more
+  }
   get_ins(status_cur,status_cur.ins); 
 
   if(status_cur.ins_stall){

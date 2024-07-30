@@ -1,9 +1,10 @@
 #include"../include/units/Reorder_buffer.h"
 #include"simulator.h"
 #include<iostream>
+#include "utility/config.h"
 #include "utility/util.h"
 namespace cpu{
-
+extern Naive_Simulator* naive_sim;
 Reorder_buffer::Reorder_buffer(Bus<CD_BUS_SIZE>*cd_bus)
 {
   this->cd_bus=cd_bus;
@@ -147,7 +148,34 @@ void Reorder_buffer::execute(Status&status_cur,Status&status_next){
       if(status_cur.regs.rely[item.ins.rd]==item.dest){
         status_cur.regs.rely[item.ins.rd]=-1;
       }
+      
     }
+#ifdef DEBUG
+    if(item.ins.pc_addr==4352){
+      int p=0;
+    }
+    std::cerr<<"Round: "<<naive_sim->round+1<<','<<item.ins.pc_addr<<':'<<naive_sim->status_cur.pc<<std::endl;
+    for(int i=0;i<Register_SIZE;i++){
+      std::cerr<<status_cur.regs.reg[i]<<" ";
+    }
+    std::cerr<<std::endl;
+    for(int i=0;i<Register_SIZE;i++){
+      std::cerr<<naive_sim->status_cur.regs.reg[i]<<" ";
+    }
+    std::cerr<<std::endl;
+    
+    if(naive_sim->status_cur.pc!=item.ins.pc_addr){
+      std::cerr<<"pc error"<<std::endl;
+      throw "pc error";
+    }
+    naive_sim->step();
+    for(int i=0;i<Register_SIZE;i++){
+      if(status_cur.regs.reg[i]!=naive_sim->status_cur.regs.reg[i]){
+        std::cerr<<"rely error"<<std::endl;
+        throw "rely error";
+      }
+    }
+#endif
     rob.pop();
 
     break;
@@ -169,10 +197,9 @@ void Reorder_buffer::execute(Status&status_cur,Status&status_next){
     ROB_state state=ROB_state::EXCUTING;
     Ins ins=status_cur.rob_signal.second.ins;
     
-    if(ins.pc_addr==4100){
-      int kk=0;
-    }
+#ifdef DEBUG
     std::cerr<<"pushing ins "<<ins.pc_addr<<std::endl;
+#endif
     rob.push(ROB_item(ins,dest,state));
     if(is_ls(ins)){
       status_next.lsb_signal.first=true;

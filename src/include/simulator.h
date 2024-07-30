@@ -43,11 +43,13 @@ struct ROB_signal{
 };
 
 using std::pair;
+class Naive_Simulator;
 struct Status{
   AddrType pc;
   DataType opcode;
   Ins ins;
   register_file regs;
+  Status()=default;
   void clear_deep()
   {
     clear();
@@ -88,24 +90,28 @@ struct Status{
     having_predicted=false;
     predict_res=false;
     ins_stall=false;
+    for(int i=0;i<Register_SIZE;i++){
+      regs.reg[i]=0;
+      regs.rely[i]=-1;
+    }
     clear();
 
   }
-  bool halt,roll_back,ins_stall;
+  bool halt{false},roll_back{false},ins_stall{false};
   
   pair<bool,ALU_signal> alu_signal;//tell ALU what to do
   pair<bool,ROB_signal> rob_signal;//tell ROB what to do
   pair<bool,LSB_signal> lsb_signal;//tell LSB what to do
   pair<bool,RS_signal> rs_signal;//tell RS what to do
   pair<bool,Store_Permission_signal>sp_signal;//tell LS buffer what to do
-  bool alu_full;
+  bool alu_full{false};
   // bool rob_full;
-  bool rob_near_full;
-  bool rob_full;
-  bool rob_clear;
-  bool lsb_full;
-  bool rs_full;
-  bool having_predicted, predict_res;
+  bool rob_near_full{false};
+  bool rob_full{false};
+  bool rob_clear{false};
+  bool lsb_full{false};
+  bool rs_full{false};
+  bool having_predicted{false}, predict_res{false};
   DataType res;
   Memory* memory_;
 };
@@ -123,6 +129,8 @@ public:
   void init(AddrType start_addr);
   Base_unit* units[5];
   Memory* memory;
+  Naive_Simulator *naive_simulator;
+
   Simulator();
   ~Simulator();
 
@@ -138,18 +146,20 @@ private:
 
 
 
-// class Naive_Simulator{
-// public:
-//   int run();
-//   void step();
-  
-//   void init(AddrType start_addr);
-//   Base_unit* memory_unit;
-//   Naive_Simulator();
-//   ~Naive_Simulator();
-// private:
-//   Status status_cur,status_next;
-// };  
+class Naive_Simulator{
+public:
+  int run();
+  void step();
+  int round=0;
+  void init(AddrType start_addr);
+  void init(AddrType start_addr,Memory* memory);
+  Base_unit* memory_unit;
+  Naive_Simulator();
+
+  ~Naive_Simulator();
+  Status status_cur,status_next;
+private:
+};  
 
 }
 

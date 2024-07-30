@@ -3,6 +3,7 @@
 
 #include "include/units/Instruction.h"
 #include "include/utility/util.h"
+#include "units/Memory.h"
 #include "utility/config.h"
 namespace cpu{
 Simulator::Simulator()
@@ -14,6 +15,7 @@ Simulator::Simulator()
   units[3] = new Load_Store_buffer(&cd_bus,&mem_bus);
   units[4] = new Reorder_buffer(&cd_bus);
   units[0] = new Reservation_station(&cd_bus);
+  naive_simulator=new Naive_Simulator();
 }
 Simulator::~Simulator()
 {
@@ -21,10 +23,12 @@ Simulator::~Simulator()
   for(int i=0;i<5;i++){
     delete units[i];
   }
+  delete naive_simulator;
 }
 void Simulator::init(AddrType start_addr)
 {
   memory->init();
+  naive_simulator->init(start_addr,memory);
   //auto init
   status_cur.init(start_addr,memory);
   status_next=status_cur;
@@ -89,13 +93,13 @@ void Simulator::execute()
 }
 }
 
-/*
+
 //---------------------------------------------------------
 // *** Naive_Simulator ***
 namespace cpu{
 Naive_Simulator::Naive_Simulator()
 {
-  memory_unit = new Memory();
+  memory_unit = new Memory(nullptr);
   // maybe i need a naive memory version
 }
 Naive_Simulator::~Naive_Simulator()
@@ -107,9 +111,18 @@ void Naive_Simulator::init(AddrType start_addr)
 {
   auto memory = dynamic_cast<Memory*>(memory_unit);
   memory->init();
-  status_cur.init();
+  status_cur.init(0,memory);
   status_cur.pc=start_addr;
 }
+void Naive_Simulator::init(AddrType start_addr,Memory* memory)
+{
+  auto memory_ = dynamic_cast<Memory*>(memory_unit);
+  memory_->copy(*memory);
+  status_cur.init(0,memory);
+  status_next.init(0,memory);
+  status_cur.pc=start_addr;
+}
+
 int Naive_Simulator::run()
 {
   while(!status_cur.halt){
@@ -120,8 +133,9 @@ int Naive_Simulator::run()
 
 void Naive_Simulator::step()
 {
-  status_next.init();
+  round++;
   auto memory = dynamic_cast<Memory*>(memory_unit);
+  status_next.init(0,memory);
   DataType opcode=memory->fetch_32(status_cur.pc);
   Ins ins;
   decode(opcode,ins);  
@@ -275,6 +289,6 @@ void Naive_Simulator::step()
 
 
 }
-*/
+
 
 

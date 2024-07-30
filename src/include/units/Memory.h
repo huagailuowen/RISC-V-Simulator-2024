@@ -28,6 +28,7 @@ public:
   void step(Status&status_cur,Status&status_next);
   void execute(Status&status_cur,Status&status_next);
   void init();
+  void copy(const Memory &memory);
 #ifdef DEBUG_
 public:
 #endif

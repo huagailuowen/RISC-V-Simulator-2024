@@ -33,6 +33,7 @@ private:
   void update_state(Status&status_cur,Status&status_next);
   CircleQueue<ROB_item,ROB_SIZE> rob;
   Bus<CD_BUS_SIZE>* cd_bus;
+
 };
 }
 #endif

@@ -6,6 +6,12 @@
 #include <exception>
 #include <iostream>
 namespace cpu{
+void Memory::copy(const Memory &memory)
+{
+  for(int i=0;i<Memory_SIZE;i++){
+    ram[i]=memory.ram[i];
+  }
+}
 Memory::Memory(Bus<MEM_BUS_SIZE>*mem_bus):mem_bus(mem_bus){
   latency_time=0;
 }
