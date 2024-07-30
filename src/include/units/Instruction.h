@@ -5,7 +5,7 @@
 #include "../utility/util.h"
 #include "Base_unit.h"
 #include "utility/circular_queue.h"
-#include"branch_predict.h"
+#include"Branch_predict.h"
 namespace cpu{
 class Status;
 void decode_U(DataType input,Ins &ins);
